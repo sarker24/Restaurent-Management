@@ -1,0 +1,17 @@
+			
+ChallenNo	Number		
+Date	Date		
+SupplierName	String	100	
+BillNo	String	50	
+BudgetHead	String	50	
+Code	String	50	
+SubCode	String	50	
+ItemName	String	100	
+Qty	Number		
+Rate	Number		
+Amount	Number		
+ExpDate	Date		
+Posted	Boolean		
+Warrenty	Boolean		
+Remarks	String	100
+User	String	50	

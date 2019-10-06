@@ -1,0 +1,7 @@
+SerialNo	Number		
+Sname	String	150	
+Pdate	Date		
+Tamount	Currency		
+Tpaid	Currency		
+Discount	Currency		
+Posted	String	10	

@@ -1,0 +1,7 @@
+TableName		String	100	
+WaiterName		String	100	
+TotalBill		Number	
+TotalVat		Number
+Guest			Number		
+TotalServiceCharge	Number		
+TotalDiscount		Number		

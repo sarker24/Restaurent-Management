@@ -1,0 +1,11 @@
+VID	Number		
+VDate	Date		
+AHead	String	50	
+Debit	Currency		
+Credit	Currency		
+Department	String	50	
+Amode	String	30	
+Description	String	150	
+StrTime	String	10	
+Posted	String	10	
+UName	String	30	

@@ -1,0 +1,29 @@
+SerialNo		Number		
+strDate			Date		
+TableName		String	30	
+WaiterName		String	30	
+Guest			String	30	
+ServiceCharge		Currency		
+Vat			Currency		
+Discount		Currency		
+GName			String	255	
+Address			String	255
+strTime			String	15
+PaymentMode		String	30
+Remarks			String	300	
+NetPayable		Currency		
+ItemCode		String	30	
+ItemName		String	50	
+Qty			Currency		
+Rate			Currency
+Amount			Currency
+TotalVat 		Currency
+TSCharge		Currency
+TotalDiscount		Currency
+Due			Currency
+Paid			Currency
+CActive			String	50
+CPost			String	50
+UName			String	50
+CReceived		Currency
+CashBack		Currency

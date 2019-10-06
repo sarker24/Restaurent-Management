@@ -1,0 +1,6 @@
+SerialNo	Number		
+ItemGroup	String	50	
+ItemCatagory	String	30	
+ItemCode	String	20	
+ItemName	String	50	
+ItemPrice	Currency		

@@ -1,0 +1,11 @@
+SerialNo	Number		
+strDate	Date		
+WaiterName	String	15	
+ItemGroup	String	50	
+ItemCode	String	5	
+ItemName	String	100	
+Qty	Number		
+Rate	Currency		
+Tips	Currency		
+Amount	Currency		
+TTips	Currency		

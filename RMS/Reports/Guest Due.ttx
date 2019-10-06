@@ -1,0 +1,18 @@
+SerialNo	Number		
+strDate		Date		
+TableName	String	10	
+WaiterName	String	15	
+Guest		String 	10
+DCard		String	15	
+GName		String	50	
+Address		String	100	
+strTime		String	10	
+TotalBill	Currency		
+TotalVat	Currency		
+TotalServiceCharge	Currency		
+TotalDiscount	Currency		
+Due		Currency		
+CActive		String	10	
+CPost		String	6
+UserName 	String 15	
+Advance 	Currency

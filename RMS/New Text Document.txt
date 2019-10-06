@@ -1,0 +1,84 @@
+Public Sub printReport()
+
+On Error GoTo ErrH
+    Dim strPath    As String
+    Dim strSQL     As String
+    Dim temp       As Double
+    Set rsDailyRpt = New ADODB.Recordset
+    
+
+If rscashmaster.State <> 0 Then rscashmaster.Close
+        rscashmaster.Open "select SerialNo,strDate,TableName,WaiterName,Guest,ServiceCharge,Vat,Discount,GName,Address,strTime, " & _
+                          "TotalBill,TotalVat,TSCharge,TotalDiscount,NetPayable,PaymentMode,Remarks," & _
+                          "Paid,Due,Active,Post,CActive,CPost,UName,BOT,KOT,Advance from tblCashMaster", cn, adOpenStatic, adLockReadOnly
+    
+    
+    
+    If rscashmaster.RecordCount = 0 Then
+        MsgBox "Data not available", vbInformation, "Confarmation"
+        Exit Sub
+    End If
+
+    
+        strPath = App.Path + "\reports\CashMemoFinal.RPT"
+        Set objReportApp = CreateObject("Crystal.CRPE.Application")
+        Set objReport = objReportApp.OpenReport(strPath)
+        Set objReportDatabase = objReport.Database
+        Set objReportDatabaseTables = objReportDatabase.Tables
+        Set objReportDatabaseTable = objReportDatabaseTables.Item(1)
+        Set ObjPrinterSetting = objReport.PrintWindowOptions
+        Set objReportFormulaFieldDefinations = objReport.FormulaFields
+        
+
+
+'    Set rsDailyRpt = New ADODB.Recordset
+If rsDailyRpt.State <> 0 Then rsDailyRpt.Close
+
+           
+          rsDailyRpt.Open "SELECT tblCashMaster.SerialNo,tblCashMaster.strDate,tblCashMaster.TableName," & _
+                          "tblCashMaster.WaiterName,tblCashMaster.Guest," & _
+                          "tblCashMaster.ServiceCharge,tblCashMaster.Vat,tblCashMaster.Discount," & _
+                          "tblCashMaster.GName, tblCashMaster.Address,tblCashMaster.PaymentMode," & _
+                          "tblCashMaster.NetPayable,tblCashDetail.ItemCode, tblCashDetail.ItemName," & _
+                          "tblCashDetail.Qty,tblCashDetail.Rate,((tblCashDetail.Qty)*(tblCashDetail.Rate))as Amount,tblCashMaster.TotalVat, " & _
+                          "tblCashMaster.TSCharge,tblCashMaster.TotalDiscount,tblCashMaster.Due FROM  tblCashMaster,tblCashDetail Where tblCashMaster.SerialNo=tblCashDetail.BillSerialNo " & _
+                          "AND tblCashMaster.SerialNo ='" & txtBillSerialNo.text & "' order by tblCashDetail.ItemCode", cn, adOpenStatic
+                    
+                   
+        Set objReportFF = objReportFormulaFieldDefinations.Item(1)
+            objReportFF.text = "'" + parseQuotes(txtWords.text) + " '"
+            
+            Set objReportFF = objReportFormulaFieldDefinations.Item(2)
+            objReportFF.text = "'" + parseQuotes(txtUName.text) + " '"
+            
+'-------------End Add Discount-------------------
+        objReportDatabaseTable.SetPrivateData 3, rsDailyRpt
+    
+        ObjPrinterSetting.HasPrintSetupButton = True
+        ObjPrinterSetting.HasRefreshButton = True
+        ObjPrinterSetting.HasSearchButton = True
+        ObjPrinterSetting.HasZoomControl = True
+        
+        objReport.DiscardSavedData
+        If Tracer = 0 Then
+        objReport.Preview "Cash Memo Report", , , , , 16777216 Or 524288 Or 65536
+        Else
+        objReport.PrintOut (False)
+        End If
+        
+        
+        Set objReport = Nothing
+        Set objReportDatabase = Nothing
+        Set objReportDatabaseTables = Nothing
+        Set objReportDatabaseTable = Nothing
+    Exit Sub
+
+ErrH:
+
+    Select Case Err.Number
+        Case 20545
+            MsgBox "Request cancelled by the user", vbInformation, "Printing Cancel Information"
+        Case Else
+            MsgBox "Error " & Err.Number & " - " & Err.Description, vbCritical, "Printing Cancel Information"
+    End Select
+End Sub

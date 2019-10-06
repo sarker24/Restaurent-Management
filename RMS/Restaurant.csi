@@ -1,0 +1,16 @@
+[History]
+B0=Restaurant/ModFunction/StartUpPosition
+B1=Restaurant/frmCashMemo/cmbATable_DropDown
+B2=Restaurant/frmCashMemo/chameleonButton1_Click
+B3=Restaurant/frmCashMemo/Form_Load
+B4=Restaurant/frmCashMemo
+B5=Restaurant/frmCashMemo/TableName
+B6=Restaurant/frmCashMemo/rcupdate
+B7=Restaurant/frmCashMemo/cboATable1_DropDown
+B8=Restaurant/frmCashMemo/cboATable_DropDown
+B9=Restaurant/frmCashMemo/cmdOpen_Click
+B10=Restaurant/frmItemSearch/Form_Load
+B11=Restaurant/frmItemEntry/FindRecord
+B12=Restaurant/frmItemEntry/Form_Load
+B13=Restaurant/frmRestaurantWaiters/printReport
+N0=Restaurant/frmCashMemo/fgCashMemo_AfterEdit

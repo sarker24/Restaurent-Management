@@ -1,0 +1,11 @@
+Line 10: Property Icon in frmRestaurentItemCatagory had an invalid file reference.
+Line 18: Property OleObjectBlob in DBGrid1 had an invalid file reference.
+Line 15: Cannot load control DBGrid1.
+Line 29: Property Picture in cmdQuit had an invalid file reference.
+Line 40: Property Picture in cmdCancel had an invalid file reference.
+Line 51: Property Picture in cmdEdit had an invalid file reference.
+Line 62: Property Picture in cmdPreview had an invalid file reference.
+Line 73: Property Picture in cmdPrint had an invalid file reference.
+Line 84: Property Picture in cmdFind had an invalid file reference.
+Line 95: Property Picture in cmdDelete had an invalid file reference.
+Line 107: Property Picture in cmdNew had an invalid file reference.

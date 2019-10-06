@@ -1,0 +1,17 @@
+SerialNo	Number		
+ReqNo	Number		
+ReqDate	Date		
+DeliveryDate	Date		
+DeptName	String	50	
+Cpost	String	50	
+UserName	String	50	
+Catagory	String	50	
+SubCatagory	String	50	
+ItemName	String	100	
+DQty	Number		
+Rate	Number		
+Amount	Number		
+Rol	Number		
+Posted	Boolean		
+Remarks	String	100	
+Unit	String	50	

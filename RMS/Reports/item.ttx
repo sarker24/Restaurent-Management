@@ -1,0 +1,7 @@
+ITEM_Group	String	100	
+ITEM_CATAGORY	String	100	
+ITEM_CODE	String	40	
+ITEM_NAME	String	100	
+ITEM_RATE	Number		
+ITEM_QTY	Number		
+TOTAL	Number		

@@ -1,0 +1,7 @@
+SerialNo	Number		
+CatagoryID	Number		
+CatagoryName	String	100	
+SubcatCode	String	50	
+ItemName	String	100	
+Rol	Number		
+Unit	String	50	

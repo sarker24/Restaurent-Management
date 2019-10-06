@@ -1,0 +1,5 @@
+Line 10: Property Icon in frmCurrencySearch had an invalid file reference.
+Line 23: Property Picture in cmdOk had an invalid file reference.
+Line 34: Property Picture in cmdCancel had an invalid file reference.
+Line 45: Property Picture in cmdFind had an invalid file reference.
+Line 112: Property FormatString in fgExport had an invalid value.

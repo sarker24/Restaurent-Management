@@ -1,0 +1,8 @@
+SerialNo	Number		
+strDate	Date		
+ItemGroup	String	30	
+ItemCode	String	30	
+ItemName	String	40	
+Qty	Currency		
+Rate	Currency		
+Amount	Currency		

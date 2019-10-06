@@ -1,0 +1,5 @@
+Line 18: Class PVProgressBarLib.PVProgressBar of control prbScan was not a loaded control class.
+Line 24: The property name _Version in prbScan is invalid.
+Line 25: The property name _ExtentX in prbScan is invalid.
+Line 26: The property name _ExtentY in prbScan is invalid.
+Line 27: The property name _StockProps in prbScan is invalid.

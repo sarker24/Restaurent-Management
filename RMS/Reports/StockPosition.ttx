@@ -1,0 +1,3 @@
+ProductCatagory	String	50	
+ItemName	String	100	
+Qty	Number		

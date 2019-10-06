@@ -1,0 +1,4 @@
+VDate   Date
+AHead	String	100	
+Debit	Currency		
+Credit	Currency		

@@ -1,0 +1,29 @@
+VERSION 5.00
+Object = "{B283E209-2CB3-11D0-ADA6-00400520799C}#3.1#0"; "pvprgbar.ocx"
+Begin VB.Form frmBackUp 
+   BackColor       =   &H00C0B4A9&
+   Caption         =   "BackUp Information"
+   ClientHeight    =   3150
+   ClientLeft      =   60
+   ClientTop       =   345
+   ClientWidth     =   4545
+   ControlBox      =   0   'False
+   ForeColor       =   &H00000000&
+   Icon            =   "frmBackUP.frx":0000
+   LinkTopic       =   "Form1"
+   MaxButton       =   0   'False
+   MinButton       =   0   'False
+   ScaleHeight     =   3150
+   ScaleWidth      =   4545
+   StartUpPosition =   2  'CenterScreen
+   Begin PVProgressBarLib.PVProgressBar ProgressBar 
+      Height          =   735
+      Left            =   0
+      TabIndex        =   7
+      Top             =   2280
+      Width           =   3015
+      _Version        =   196609
+      _ExtentX        =   5318
+      _ExtentY        =   1296
+      _StockProps     =   237
+      ForeColor       =   -2147483630

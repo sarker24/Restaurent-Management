@@ -1,0 +1,6 @@
+ID	Number		
+Name	String	100	
+Address	String	150	
+CnfPhone	String	20	
+CnfFax	String	20	
+CnfEmail	String	50	

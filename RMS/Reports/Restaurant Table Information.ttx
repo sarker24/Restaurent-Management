@@ -1,0 +1,4 @@
+TableID	Number		
+Name	String	255	
+TableNo	Number		
+TableDescription	String	255	

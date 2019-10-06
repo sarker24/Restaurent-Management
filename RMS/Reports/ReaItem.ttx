@@ -1,0 +1,14 @@
+SerialNo	Number		
+ReqDare	Date		
+DeptName	String	50	
+Catagory	String	50	
+SubCatagory	String	50	
+ItemName	String	100	
+Qty	Number		
+Rate	Number		
+Amount	Number		
+Role	Number		
+Posted	Boolean		
+Remarks	String	100	
+Cposted	String	50	
+Unit	String	50	

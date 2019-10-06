@@ -1,0 +1,369 @@
+
+Option Explicit
+
+Private rsMaster                            As ADODB.Recordset
+Private rsSelect                            As ADODB.Recordset 'sub
+Private rscashmaster                        As New ADODB.Recordset
+
+Private rsTemp2                             As ADODB.Recordset
+Private objReportApp                        As CRPEAuto.Application
+Private objReport                           As CRPEAuto.Report
+Private objReportDatabase                   As CRPEAuto.Database
+Private objReportDatabaseTables             As CRPEAuto.DatabaseTables
+Private objReportDatabaseTable              As CRPEAuto.DatabaseTable
+Private objReportFormulaFieldDefinations    As CRPEAuto.FormulaFieldDefinitions
+Private objReportFF                         As CRPEAuto.FormulaFieldDefinition
+Private ObjPrinterSetting                   As CRPEAuto.PrintWindowOptions
+Private Tracer                              As Integer
+Private strGroupName                        As String
+
+Private Sub CmdExit_Click()
+Unload Me
+End Sub
+
+Private Sub chkAllWaiter_Click()
+If chkAllWaiter.Value = 1 Then
+cmbWaiter.Enabled = False
+Else
+cmbWaiter.Enabled = True
+End If
+End Sub
+
+Private Sub cmbWaiter_Change()
+If cmbWaiter <> rscashmaster!WaiterName Then
+MsgBox "Invalid Waiter Name.", vbInformation, "Confirmation"
+cmbWaiter.text = ""
+cmbWaiter.SetFocus
+End If
+End Sub
+
+Private Sub Form_Load()
+    Call Connect
+    Call WaiterName
+    ModFunction.StartUpPosition Me
+    OpCurrentDate.Visible = True
+    OpCustomDate.Visible = True
+    CurrentDate.Value = Date
+    FDate.Value = Date
+    TDate.Value = Date
+            
+End Sub
+
+Private Sub cmbWaiter_KeyPress(KeyAscii As Integer)
+   KeyAscii = AutoMatchCBBox(cmbWaiter, KeyAscii)
+   If KeyAscii = 13 Then
+       SendKeys Chr(9)
+    End If
+End Sub
+
+Private Sub cmbWaiter_GotFocus()
+cmbWaiter.BackColor = &HFFFFC0
+End Sub
+
+Private Sub cmbWaiter_LostFocus()
+cmbWaiter.BackColor = vbWhite
+End Sub
+
+Private Sub WaiterName()
+
+Dim rsTemp2 As New ADODB.Recordset
+
+     rsTemp2.Open ("SELECT DISTINCT WaiterName FROM tblWaiterName ORDER BY WaiterName ASC"), cn, adOpenStatic
+
+    While Not rsTemp2.EOF
+        cmbWaiter.AddItem rsTemp2("WaiterName")
+        rsTemp2.MoveNext
+    Wend
+    rsTemp2.Close
+
+End Sub
+
+Private Sub OpCurrentDate_Click()
+    OpCurrentDate.Visible = True
+    OpCustomDate.Visible = True
+    CurrentDate.Visible = True
+'    Frame1.Visible = False
+    lblFrom.Visible = False
+    FDate.Visible = False
+    lblTo.Visible = False
+    TDate.Visible = False
+End Sub
+Private Sub opCustomDate_Click()
+    OpCustomDate.Visible = True
+    OpCurrentDate.Visible = True
+    lblFrom.Visible = True
+    lblTo.Visible = True
+'    Frame1.Visible = True
+    CurrentDate.Visible = False
+    FDate.Visible = True
+    TDate.Visible = True
+End Sub
+Private Sub tbEO_ButtonClick(ByVal Button As MSComctlLib.Button)
+  Select Case Button.Key
+     Case "Preview"
+            If Validate Then
+            If chkAllWaiter.Value = 1 Then
+                Tracer = 0
+                Call FetchData1
+                Call previewReport1
+                Else
+                Call FetchData
+            Call previewReport
+                    End If
+               End If
+     Case "Print"
+            If Validate Then
+            If chkAllWaiter.Value = 1 Then
+                Tracer = 1
+                Call FetchData1
+                Call previewReport1
+                Else
+                Call FetchData
+            Call previewReport
+                    End If
+               End If
+     Case "Close"
+               Unload Me
+    End Select
+
+End Sub
+Private Function Validate() As Boolean
+           Validate = True
+        If FDate.Value > TDate.Value Then
+            MsgBox "Invalid Date and select accurate date range", vbInformation, "Party Wise Sample Report"
+            FDate.SetFocus
+            Validate = False
+            Exit Function
+        End If
+    End Function
+
+Public Function parseQuotes(text As String) As String
+    parseQuotes = Replace(text, "'", "''")
+End Function
+
+Public Function FetchData()
+
+    Set rsMaster = New ADODB.Recordset
+    
+    If OpCurrentDate.Value = True Then
+    
+    
+    rsMaster.Open "SELECT tblCashMaster.SerialNo,tblCashMaster.strDate, " & _
+                  "ItemGroup=(SELECT ItemGroup from tblItemMaster where tblItemMaster.SerialNo=tblCashDetail.SerialNo), " & _
+                  "tblCashDetail.ItemCode,tblCashDetail.ItemName,tblCashDetail.Qty,tblCashDetail.Rate,tblCashDetail.Tips, " & _
+                  "(tblCashDetail.Qty*tblCashDetail.Rate) as Amount,(tblCashDetail.Qty*tblCashDetail.Tips) as TTips " & _
+                  "FROM tblCashMaster INNER JOIN " & _
+                  "tblCashDetail ON tblCashMaster.SerialNo=tblCashDetail.BillSerialNo AND tblCashMaster.strDate='" & CurrentDate.Value & "' " & _
+                  "And tblCashMaster.CActive = 'Active' And tblCashMaster.CPost = 'Posted' and tblCashMaster.WaiterName='" & parseQuotes(cmbWaiter) & "'", cn, adOpenStatic, adLockReadOnly
+    
+                             
+     End If
+             
+      If OpCustomDate.Value = True Then
+      
+       rsMaster.Open "SELECT tblCashMaster.SerialNo,tblCashMaster.strDate, " & _
+                         "ItemGroup=(SELECT ItemGroup from tblItemMaster where tblItemMaster.SerialNo=tblCashDetail.SerialNo), " & _
+                         "tblCashDetail.ItemCode,tblCashDetail.ItemName,(tblCashDetail.Qty),tblCashDetail.Rate,tblCashDetail.Tips, " & _
+                         "(tblCashDetail.Qty*tblCashDetail.Rate) as Amount,(tblCashDetail.Qty*tblCashDetail.Tips) as TTips " & _
+                         "FROM tblCashMaster INNER JOIN " & _
+                         "tblCashDetail ON tblCashMaster.SerialNo=tblCashDetail.BillSerialNo AND tblCashMaster.strDate  " & _
+                         "BETWEEN '" & FDate.Value & "' AND '" & TDate.Value & "' And tblCashMaster.CActive = 'Active' " & _
+                         "And tblCashMaster.CPost = 'Posted' and tblCashMaster.WaiterName='" & parseQuotes(cmbWaiter) & "'", cn, adOpenStatic, adLockReadOnly
+                                            
+      End If
+                  
+End Function
+
+
+Public Sub previewReport()
+On Error GoTo ErrH
+    Dim strPath As String
+
+    If rsMaster.RecordCount = 0 Then
+        MsgBox "Data not available", vbInformation
+        Exit Sub
+    End If
+
+    
+        strPath = App.Path + "\reports\Waiter Wise Tips.rpt"
+        Set objReportApp = CreateObject("Crystal.CRPE.Application")
+        Set objReport = objReportApp.OpenReport(strPath)
+        Set objReportDatabase = objReport.Database
+        Set objReportDatabaseTables = objReportDatabase.Tables
+        Set objReportDatabaseTable = objReportDatabaseTables.Item(1)
+        Set ObjPrinterSetting = objReport.PrintWindowOptions
+        Set objReportFormulaFieldDefinations = objReport.FormulaFields
+   
+   If OpCurrentDate.Value = True Then
+   
+   Set objReportFF = objReportFormulaFieldDefinations.Item(1)
+              objReportFF.text = "'" + Format(CurrentDate, "dd-MMM-yyyy") + "'"
+   Set objReportFF = objReportFormulaFieldDefinations.Item(4)
+              objReportFF.text = "'" + cmbWaiter + "'"
+
+              
+  End If
+  
+  
+  If OpCustomDate.Value = True Then
+  
+   Set objReportFF = objReportFormulaFieldDefinations.Item(2)
+
+              objReportFF.text = "'" + Format(FDate, "dd-MMM-yyyy") + "'"
+
+   Set objReportFF = objReportFormulaFieldDefinations.Item(3)
+             objReportFF.text = "'" + Format(TDate, "dd-MMM-yyyy") + "'"
+             
+   Set objReportFF = objReportFormulaFieldDefinations.Item(4)
+              objReportFF.text = "'" + cmbWaiter + "'"
+
+             
+   End If
+
+
+      
+        objReportDatabaseTable.SetPrivateData 3, rsMaster
+    
+        ObjPrinterSetting.HasPrintSetupButton = True
+        ObjPrinterSetting.HasRefreshButton = True
+        ObjPrinterSetting.HasSearchButton = True
+        ObjPrinterSetting.HasZoomControl = True
+        
+        objReport.DiscardSavedData
+        objReport.Preview "Waiter Insformations", , , , , 16777216 Or 524288 Or 65536
+    
+      
+     If Tracer = 1 Then
+    objReport.PrintOut
+    End If
+  
+        Set objReport = Nothing
+        Set objReportDatabase = Nothing
+        Set objReportDatabaseTables = Nothing
+        Set objReportDatabaseTable = Nothing
+    Exit Sub
+
+ErrH:
+
+    Select Case Err.Number
+        Case 20545
+            MsgBox "Request cancelled by the user", vbInformation, "Waiter Information Report"
+        Case Else
+            MsgBox "Error " & Err.Number & " - " & Err.Description, vbCritical, "Waiter Information Report"
+    End Select
+End Sub
+
+
+Public Function FetchData1()
+
+    Set rsMaster = New ADODB.Recordset
+    
+    If OpCurrentDate.Value = True Then
+    
+    
+    rsMaster.Open "SELECT tblCashMaster.SerialNo,tblCashMaster.strDate, " & _
+                  "ItemGroup=(SELECT ItemGroup from tblItemMaster where tblItemMaster.SerialNo=tblCashDetail.SerialNo), " & _
+                  "tblCashDetail.ItemCode,tblCashDetail.ItemName,tblCashDetail.Qty,tblCashDetail.Rate,tblCashDetail.Tips, " & _
+                  "(tblCashDetail.Qty*tblCashDetail.Rate) as Amount,(tblCashDetail.Qty*tblCashDetail.Tips) as TTips " & _
+                  "FROM tblCashMaster INNER JOIN " & _
+                  "tblCashDetail ON tblCashMaster.SerialNo=tblCashDetail.BillSerialNo AND tblCashMaster.strDate='" & CurrentDate.Value & "' " & _
+                  "And tblCashMaster.CActive = 'Active' And tblCashMaster.CPost = 'Posted' ", cn, adOpenStatic, adLockReadOnly
+    
+                             
+     End If
+             
+      If OpCustomDate.Value = True Then
+      
+       rsMaster.Open "SELECT tblCashMaster.SerialNo,tblCashMaster.strDate, " & _
+                         "ItemGroup=(SELECT ItemGroup from tblItemMaster where tblItemMaster.SerialNo=tblCashDetail.SerialNo), " & _
+                         "tblCashDetail.ItemCode,tblCashDetail.ItemName,(tblCashDetail.Qty),tblCashDetail.Rate,tblCashDetail.Tips, " & _
+                         "(tblCashDetail.Qty*tblCashDetail.Rate) as Amount,(tblCashDetail.Qty*tblCashDetail.Tips) as TTips " & _
+                         "FROM tblCashMaster INNER JOIN " & _
+                         "tblCashDetail ON tblCashMaster.SerialNo=tblCashDetail.BillSerialNo AND tblCashMaster.strDate  " & _
+                         "BETWEEN '" & FDate.Value & "' AND '" & TDate.Value & "' And tblCashMaster.CActive = 'Active' " & _
+                         "And tblCashMaster.CPost = 'Posted'", cn, adOpenStatic, adLockReadOnly
+                                            
+      End If
+                  
+End Function
+
+
+Public Sub previewReport1()
+On Error GoTo ErrH
+    Dim strPath As String
+
+    If rsMaster.RecordCount = 0 Then
+        MsgBox "Data not available", vbInformation
+        Exit Sub
+    End If
+
+    
+        strPath = App.Path + "\reports\Waiter Wise Tips Summary.rpt"
+        Set objReportApp = CreateObject("Crystal.CRPE.Application")
+        Set objReport = objReportApp.OpenReport(strPath)
+        Set objReportDatabase = objReport.Database
+        Set objReportDatabaseTables = objReportDatabase.Tables
+        Set objReportDatabaseTable = objReportDatabaseTables.Item(1)
+        Set ObjPrinterSetting = objReport.PrintWindowOptions
+        Set objReportFormulaFieldDefinations = objReport.FormulaFields
+   
+   If OpCurrentDate.Value = True Then
+   
+   Set objReportFF = objReportFormulaFieldDefinations.Item(1)
+              objReportFF.text = "'" + Format(CurrentDate, "dd-MMM-yyyy") + "'"
+   Set objReportFF = objReportFormulaFieldDefinations.Item(4)
+              objReportFF.text = "'" + cmbWaiter + "'"
+
+              
+  End If
+  
+  
+  If OpCustomDate.Value = True Then
+  
+   Set objReportFF = objReportFormulaFieldDefinations.Item(2)
+
+              objReportFF.text = "'" + Format(FDate, "dd-MMM-yyyy") + "'"
+
+   Set objReportFF = objReportFormulaFieldDefinations.Item(3)
+             objReportFF.text = "'" + Format(TDate, "dd-MMM-yyyy") + "'"
+             
+   Set objReportFF = objReportFormulaFieldDefinations.Item(4)
+              objReportFF.text = "'" + cmbWaiter + "'"
+
+             
+   End If
+
+
+      
+        objReportDatabaseTable.SetPrivateData 3, rsMaster
+    
+        ObjPrinterSetting.HasPrintSetupButton = True
+        ObjPrinterSetting.HasRefreshButton = True
+        ObjPrinterSetting.HasSearchButton = True
+        ObjPrinterSetting.HasZoomControl = True
+        
+        objReport.DiscardSavedData
+        objReport.Preview "Waiter Insformations", , , , , 16777216 Or 524288 Or 65536
+    
+      
+     If Tracer = 1 Then
+    objReport.PrintOut
+    End If
+  
+        Set objReport = Nothing
+        Set objReportDatabase = Nothing
+        Set objReportDatabaseTables = Nothing
+        Set objReportDatabaseTable = Nothing
+    Exit Sub
+
+ErrH:
+
+    Select Case Err.Number
+        Case 20545
+            MsgBox "Request cancelled by the user", vbInformation, "Waiter Information Report"
+        Case Else
+            MsgBox "Error " & Err.Number & " - " & Err.Description, vbCritical, "Waiter Information Report"
+    End Select
+End Sub
+
+

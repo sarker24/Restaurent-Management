@@ -1,0 +1,16 @@
+serialNo	Number		
+ReceivingDate	Date		
+SupplierName	String	50	
+ProductCatagory	String	50	
+Subcatagory	String	50	
+ItemName	String	100	
+Quentity	Number		
+Rate	Number		
+Amount	Number		
+Rol	Number		
+ExpDate	Date		
+Posted	Boolean		
+Warrenty	Boolean		
+Remarks	String	100	
+ConfirmPosted	String	50	
+Unit	String	20	

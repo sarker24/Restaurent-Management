@@ -1,0 +1,16 @@
+SerialNo	Number		
+strDate	Date		
+TableName	String	30	
+WaiterName	String	30	
+Guest	String	30	
+ServiceCharge	Currency		
+Vat	Currency		
+Discunt	Currency		
+Name	String	50	
+Address	String	50	
+BillSerialNo	Number		
+ItemCode	String	20	
+ItemName	String	50	
+Qty	Number		
+Rate	Currency		
+Amount	Currency		
